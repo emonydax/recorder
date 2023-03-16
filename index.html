@@ -1,0 +1,129 @@
+<html>
+    <head>
+        <script type="module">
+            document.getElementById("play-button").addEventListener("click", e => {
+                document.querySelector('svg').unpauseAnimations();
+                e.target.querySelector('animateTransform').removeAttribute("begin");
+                e.target.classList.toggle('selected');
+                document.querySelector('video').play();
+                document.getElementById("stop-button").classList.remove('selected');
+            });
+
+            document.getElementById("stop-button").addEventListener("click", e => {
+                document.querySelector('svg').pauseAnimations();
+                e.target.classList.add('selected');
+
+                document.getElementById("play-button").classList.remove('selected');
+                document.querySelector('video').pause();
+            });
+        </script>
+    </head>
+    <body>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2000">
+            <defs>
+                <g id="reel">
+                    <rect width="500" height="500" fill="#333" mask="url(#reelCutoutMask)" />
+                </g>
+                <mask id="reelMiddleMask">
+                    <circle cx="250" cy="250" r="250" />
+                    <circle cx="250" cy="250" r="200" fill="white" />
+                    <circle cx="250" cy="250" r="75" />
+                </mask>
+                <mask id="reelCutoutMask">
+                    <circle cx="250" cy="250" r="250" fill="white" />
+                    <polygon points="150,0 250,250 350,0" fill="black" mask="url(#reelMiddleMask)" />
+                    <polygon points="150,0 250,250 350,0" fill="black" mask="url(#reelMiddleMask)" transform="rotate(120 250 250)" />
+                    <polygon points="150,0 250,250 350,0" fill="black" mask="url(#reelMiddleMask)" transform="rotate(-120 250 250)" />
+                </mask>
+            </defs>
+            <style>
+                #play-button:hover + polygon {
+                    fill: pink;
+                }
+
+                #play-button.selected + polygon {
+                    fill: lightgreen;
+                }
+
+                #stop-button:hover + rect {
+                    fill: pink;
+                }
+
+                #stop-button.selected + rect {
+                    fill: lightgreen;
+                }
+            </style>
+            <rect width="100%" height="100%" fill="white" />
+
+            <g class="box" style="transform: translate(50px, 50px)">
+                <!-- Panel behind tapes -->
+                <rect width="1100" height="450" fill="#CCCBC4" stroke="#CCCBC4" x="100" y="50" />
+                <!-- Panel behind buttons -->
+                <rect width="1200" height="300" fill="#DEDBD0" stroke="#DEDBD0" y="525" x="50" />
+                <!-- Above buttons -->
+                <polygon points="100,500 1200,500 1250,525 50,525" fill="#D6D6D4" stroke="#D6D6D4" />
+
+                <use href="#reel" x="100" y="-25" id="left-reel">
+                    <animateTransform
+                        xlink:href="#left-reel"
+                        attributeName="transform"
+                        type="rotate"
+                        from="360 350 225"
+                        to="0 350 225"
+                        dur="5s"
+                        begin="play-button-animation.begin + 0s"
+                        repeatCount="indefinite" />
+                </use>
+                <use href="#reel" x="700" y="-25" transform="rotate(20 950 225)" id="right-reel">
+                    <animateTransform
+                        xlink:href="#right-reel"
+                        attributeName="transform"
+                        type="rotate"
+                        from="380 950 225"
+                        to="20 950 225"
+                        dur="3s"
+                        begin="play-button-animation.begin + 0s"
+                        repeatCount="indefinite" />
+                </use>
+                <!-- Knobs -->
+                <rect width="450" height="200" x="100" y="575" fill="#a19f96" />
+                <!-- Buttons -->
+                <rect width="450" height="200" x="750" y="575" fill="#a19f96" />
+
+                <!-- Record -->
+                <rect width="110.5" height="89.5" x="752" y="576.5" fill="white" />
+                <circle cx="807.25" cy="597.5" r="8" fill="#333" />
+                <!-- Pause -->
+                <rect width="110.5" height="89.5" x="864" y="576.5" fill="white" />
+                <rect width="7" height="10" x="908.75" y="592.5" fill="#333" />
+
+                <rect width="7" height="10" x="922.75" y="592.5" fill="#333" />
+                <!-- Play right-to-left -->
+                <rect width="110.5" height="89.5" x="976" y="576.5" fill="white">
+                </rect>
+                <polygon points="1041.75,591.5 1020.75,597.5 1041.75,603.5" fill="#333" />
+                <!-- Play left-to-right -->
+                <rect width="110.5" height="89.5" x="1088" y="576.5" fill="white" id="play-button">
+                    <animateTransform
+                        begin="click"
+                        id="play-button-animation" />
+                </rect>
+                <polygon points="1132.75,591.5 1153.75,597.5 1132.75,603.5" fill="#333" />
+
+                <!-- Rewind -->
+                <rect width="110.5" height="89.5" x="752" y="684" fill="white" />
+                <polygon points="806.25,699 790.25,705 806.25,711" fill="#333" />
+                <polygon points="825.25,699 809.25,705 825.25,711" fill="#333" />
+                <!-- Stop -->
+                <rect width="222.5" height="89.5" x="864" y="684" fill="white" id="stop-button" />
+                <rect width="21" height="10" x="964.75" y="700" fill="#333" />
+                <!-- Fast Forward -->
+                <rect width="110.5" height="89.5" x="1088" y="684" fill="white" />
+                <polygon points="1126.25,699 1142.25,705 1126.25,711" fill="#333" />
+                <polygon points="1145.25,699 1161.25,705 1145.25,711" fill="#333" />
+
+            </g>
+        </svg>
+        <video src="https://github.com/emonydax/recorder/blob/main/recorded.mp3?raw=true" />
+    </body>
+</html>
